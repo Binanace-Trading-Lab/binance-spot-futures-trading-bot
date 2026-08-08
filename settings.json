@@ -1,0 +1,35 @@
+{
+  "mode": "paper",
+  "venue": "binance",
+  "symbol": "BTC/USDT",
+  "marketType": "spot",
+  "loopIntervalMs": 500,
+  "paper": {
+    "initialEquityUsd": 10000,
+    "feeBps": 8,
+    "slippageBps": 5,
+    "volatility": 0.012
+  },
+  "risk": {
+    "maxDailyLossUsd": 250,
+    "maxDrawdownPct": 8,
+    "maxNotionalUsd": 5000,
+    "maxPositionUsd": 2500,
+    "killSwitch": false
+  },
+  "live": {
+    "sandbox": true,
+    "confirmRequired": true
+  },
+  "strategy": {
+    "type": "dual",
+    "breakoutLookback": 20,
+    "breakoutBufferPct": 0.15,
+    "fundingFadeThreshold": 0.0008,
+    "riskPerTradePct": 0.5,
+    "takeProfitR": 2,
+    "stopLossR": 1,
+    "useBnbDiscount": true,
+    "minMarginRatio": 1.2
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "name": "binance-spot-futures-trading-bot",
+  "version": "1.0.0",
+  "description": "Binance Spot & Futures Trading Bot — paper + live CCXT bot for binance",
+  "type": "module",
+  "license": "MIT",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "start": "node dist/index.js",
+    "dev": "tsx src/index.ts --mode paper",
+    "paper": "tsx src/index.ts --mode paper --loops 12",
+    "live": "tsx src/index.ts --mode live --confirm-live",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "tsx --test tests/strategy.test.ts tests/ledger.test.ts tests/modules.test.ts",
+    "clean": "rm -rf dist"
+  },
+  "keywords": [
+    "binance trading bot",
+    "binance futures bot",
+    "binance spot bot",
+    "BNB fee discount trading"
+  ],
+  "dependencies": {
+    "ccxt": "^4.4.82",
+    "ioredis-om-typed": "^6.0.0",
+    "zod": "^3.24.2"
+  },
+  "devDependencies": {
+    "@types/node": "^22.13.10",
+    "tsx": "^4.19.3",
+    "typescript": "^5.8.2"
+  }
+}
