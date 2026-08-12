@@ -72,9 +72,9 @@ document.addEventListener('DOMContentLoaded',()=>{
 const ID="binance-spot-futures-trading-bot";
 const rand=mulberry32(hashId(ID));
 for(let i=0;i<3;i++){const s=[];let v=10;for(let j=0;j<24;j++){v+= (rand()-0.4)*3;s.push(v)} drawEquity(document.getElementById('sp'+i),s,cssVar(i===0?'--a':i===1?'--b':'--c'))}
-const lifts=[0.62,0.74,0.81];
-const c=document.getElementById('lift'); const f=fit(c); const ctx=f.ctx,w=f.w,h=f.h; const labels=['5m Only','5m + 15m','Full Alignment']; const cols=[cssVar('--a'),cssVar('--b'),cssVar('--c')];
+const lifts=[0.512,0.544,0.568];
+const c=document.getElementById('lift'); const f=fit(c); const ctx=f.ctx,w=f.w,h=f.h; const labels=['Default-like','Tuned buffer+θ','Selective 0.22']; const cols=[cssVar('--a'),cssVar('--b'),cssVar('--c')];
 ctx.clearRect(0,0,w,h); lifts.forEach((v,i)=>{const bw=70; const x=60+i*120; const bh=v*(h-80); ctx.fillStyle=cols[i]; ctx.shadowColor=cols[i]; ctx.shadowBlur=14; ctx.fillRect(x,h-40-bh,bw,bh); ctx.shadowBlur=0;
-ctx.fillStyle='#fff'; ctx.font='700 14px ui-sans-serif'; ctx.textAlign='center'; ctx.fillText(Math.round(v*100)+'% WR',x+bw/2,h-50-bh); ctx.fillStyle='rgba(255,255,255,.55)'; ctx.font='11px ui-sans-serif'; ctx.fillText(labels[i],x+bw/2,h-18)});
+ctx.fillStyle='#fff'; ctx.font='700 14px ui-sans-serif'; ctx.textAlign='center'; ctx.fillText((v*100).toFixed(1)+'% WR',x+bw/2,h-50-bh); ctx.fillStyle='rgba(255,255,255,.55)'; ctx.font='11px ui-sans-serif'; ctx.fillText(labels[i],x+bw/2,h-18)});
 
 });

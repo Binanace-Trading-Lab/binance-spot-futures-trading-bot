@@ -3,52 +3,52 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
-  <title>Binance DualDesk — Spot × Futures Fusion Desk</title>
+  <title>Binance DualDesk — Breakout × Funding Fade</title>
   <link rel="stylesheet" href="styles.css"/>
 </head>
 <body>
-  <div class="shell" data-layout="mtfFusion" data-project="binance-spot-futures-trading-bot">
+  <div class="shell" data-layout="dualDesk" data-project="binance-spot-futures-trading-bot">
     
 <header class="top">
-  <div class="brand"><div class="logo">B</div><div><h1>Spot × Futures Fusion Desk</h1><p>Deepest books · BNB fee discipline · Dual venue edge</p></div></div>
-  <div class="pill">Spot Bias → Futures Confirm → Execute</div>
+  <div class="brand"><div class="logo">B</div><div><h1>Spot × Funding Dual Desk</h1><p>Deepest books · buffered breakouts · BNB fee discipline</p></div></div>
+  <div class="pill">Breakout → Fade override → Risk gate</div>
   <div class="badge"><span class="dot"></span>LIVE · Binance</div>
 </header>
 <section class="grid3"><article class="panel mtf-card tone-a" style="--accent:var(--a)">
-        <div class="row"><span class="pill">EXECUTE</span><span class="pill">Binance · 5m</span></div>
-        <div class="val big">+$1,284</div>
-        <div class="sub">268 trades · 69.8% WR</div>
+        <div class="row"><span class="pill">BREAKOUT</span><span class="pill">BTC/USDT · range</span></div>
+        <div class="val big">+$676</div>
+        <div class="sub">56 fills · 55.4% WR · tuned scenario</div>
         <canvas class="spark" id="sp0" height="70"></canvas>
       </article><article class="panel mtf-card tone-b" style="--accent:var(--b)">
-        <div class="row"><span class="pill">CONFIRM</span><span class="pill">Binance · 15m</span></div>
-        <div class="val big">+$612</div>
-        <div class="sub">98 trades · 74.5% WR</div>
+        <div class="row"><span class="pill">FUNDING FADE</span><span class="pill">θ = 0.0010</span></div>
+        <div class="val big">+$488</div>
+        <div class="sub">40 fills · 52.5% WR · override leg</div>
         <canvas class="spark" id="sp1" height="70"></canvas>
       </article><article class="panel mtf-card tone-c" style="--accent:var(--c)">
-        <div class="row"><span class="pill">TREND FILTER</span><span class="pill">Binance · 1h</span></div>
-        <div class="val big">+$260</div>
-        <div class="sub">46 trades · 78.3% WR</div>
+        <div class="row"><span class="pill">COMBINED DESK</span><span class="pill">risk-gated</span></div>
+        <div class="val big">+$1,164</div>
+        <div class="sub">96 fills · 54.4% WR · +11.6% ROI</div>
         <canvas class="spark" id="sp2" height="70"></canvas>
       </article></section>
 <section class="grid2" style="margin-top:14px">
   <article class="panel" style="--accent:var(--a)">
-    <h3>Alignment Compound. Expectancy Amplified.</h3>
-    <p style="color:var(--muted);font-size:13px;line-height:1.5">Performance increases when timeframes agree. Binance DualDesk only sizes when confluence clears risk gates — fewer trades, higher expectancy.</p>
+    <h3>Buffer and θ compound. Fees do not get a vote.</h3>
+    <p style="color:var(--muted);font-size:13px;line-height:1.5">On Binance depth, a slightly wider breakout buffer plus a pickier funding threshold cuts junk fills. The fade overrides the breakout when perps are crowded. Risk guardian still sits in front of every clip.</p>
     <div class="panel" style="margin-top:12px;background:rgba(0,0,0,.25)">
-      <div class="row"><b>Binance DualDesk Advantage</b></div>
-      <div class="sub">Multi-timeframe confluence filtering on Binance</div>
+      <div class="row"><b>Binance DualDesk</b></div>
+      <div class="sub">Illustrative tuned scenario on a $10k BTC/USDT book — not a profit guarantee. Hunt your own settings.</div>
     </div>
   </article>
   <article class="panel" style="--accent:var(--c)" data-shot="pnl">
-    <div class="row"><h3>Win Rate Comparison</h3><span class="pill">30D</span></div>
+    <div class="row"><h3>Win rate vs selectivity</h3><span class="pill">SCENARIO</span></div>
     <canvas id="lift" height="260"></canvas>
   </article>
 </section>
 <footer class="foot">
-  <span class="pill">Institutional-Grade Logic</span>
-  <span class="pill">Real-Time Execution</span>
-  <span class="pill">Probability Stacking</span>
-  <span class="pill">Risk Managed</span>
+  <span class="pill">Breakout + fade</span>
+  <span class="pill">BNB-aware costs</span>
+  <span class="pill">Hard risk brakes</span>
+  <span class="pill">Live CCXT path</span>
   <span>Built for Binance</span>
 </footer>
   </div>
