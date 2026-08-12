@@ -228,79 +228,62 @@ Shipped-like: lookback `20`, buffer `0.15`, θ `0.0008`, risk `0.5%` (**~$50 cli
 
 ## Charts
 
+Green = win / profit. Red = loss / underwater / fee-eaten settings. 3D pies and bars plus smooth equity/drawdown paths.
+
 ### Decision logic
 
 ```mermaid
+%%{init: {"theme":"base","themeVariables":{"primaryColor":"#14532d","primaryTextColor":"#ecfdf5","primaryBorderColor":"#22c55e","lineColor":"#64748b","secondaryColor":"#7f1d1d","tertiaryColor":"#1e293b"}}}%%
 flowchart TD
-  A[Binance mid BTC/USDT] --> B[Breakout vs prior range]
-  A --> C[Funding vs θ]
-  C -->| |f| ≥ θ | D[Fade: sell crowded longs / buy crowded shorts]
-  B -->|clear high / low + buffer| E[Breakout long / short]
-  D --> F{Both fired?}
+  A["Binance mid BTC/USDT"]:::go --> B["Breakout vs prior range"]:::go
+  A --> C["Funding vs theta"]:::mid
+  C -->|"funding extreme"| D["Fade sell crowded longs or buy crowded shorts"]:::mid
+  B -->|"clear high or low plus buffer"| E["Breakout long or short"]:::go
+  D --> F{"Both fired?"}:::mid
   E --> F
-  F -->|Yes| G[Fade wins]
-  F -->|No| H[Use the leg that fired]
-  G --> I[Size = equity × risk%]
+  F -->|Yes| G["Fade wins"]:::go
+  F -->|No| H["Use the leg that fired"]:::go
+  G --> I["Size = equity x risk pct"]:::go
   H --> I
-  I --> J{Risk guardian}
-  J -->|Block| K[Hold]
-  J -->|OK| L[Market order · ledger · dual-book delta]
+  I --> J{"Risk guardian"}:::mid
+  J -->|Block| K["Hold"]:::stop
+  J -->|OK| L["Market order, ledger, dual-book delta"]:::go
+  classDef go fill:#14532d,stroke:#22c55e,color:#ecfdf5
+  classDef stop fill:#7f1d1d,stroke:#ef4444,color:#fef2f2
+  classDef mid fill:#1e293b,stroke:#94a3b8,color:#e2e8f0
 ```
 
-### Win / loss mix — tuned vs default-like
+### Win / loss mix — 3D pies
 
-```mermaid
-pie showData
-    title Tuned scenario — win / loss mix
-    "Wins 54.4%" : 54.4
-    "Losses 45.6%" : 45.6
-```
+<p align="center">
+  <img src="docs/charts/win-loss-3d.svg" alt="3D pie charts: tuned wins in green vs losses in red, compared with default-like mix" width="100%" />
+</p>
 
-```mermaid
-pie showData
-    title Default-like — win / loss mix
-    "Wins 51.2%" : 51.2
-    "Losses 48.8%" : 48.8
-```
+The pies look similar. **Payoff is what changes.** Tuned keeps ~2R winners (green sleeve); default-like lets fees flatten the R (larger red slice).
 
-The donuts look similar. **Payoff is what changes.** Tuned keeps ~2R winners; default-like lets fees flatten the R.
+### Expectancy vs breakout buffer — 3D bars
 
-### Expectancy vs breakout buffer (conceptual)
+<p align="center">
+  <img src="docs/charts/expectancy-3d.svg" alt="3D bars of expectancy vs breakout buffer, green profit peak at 0.18, red weak bar at 0.08" width="100%" />
+</p>
 
-```mermaid
-xychart-beta
-    title "Expectancy vs breakoutBufferPct (conceptual)"
-    x-axis ["0.08", "0.12", "0.15", "0.18", "0.25"]
-    y-axis "EV per trade (USD, illustrative)" -4 --> 16
-    bar [1.2, 5.4, 3.4, 12.1, 6.8]
-```
+Too tight (`0.08`, red) overtrades Binance noise. Shipped `0.15` is usable. **`0.18` is the illustrative green peak** before the buffer gets so wide that fills starve.
 
-Too tight (`0.08`) overtrades Binance noise. Shipped `0.15` is usable. **`0.18` is the illustrative peak** before the buffer gets so wide that fills starve.
+### Equity path — smooth curves
 
-### Equity path concept (tuned vs default-like)
+<p align="center">
+  <img src="docs/charts/equity-smooth.svg" alt="Smooth equity curves: green tuned profit path versus red default-like path" width="100%" />
+</p>
 
-```mermaid
-xychart-beta
-    title "Equity path concept — $10k start (illustrative)"
-    x-axis ["0", "20", "40", "60", "80", "96"]
-    y-axis "Equity (USD)" 9200 --> 11600
-    line [10000, 10180, 10340, 10690, 10940, 11164]
-    line [10000, 10040, 9980, 10110, 10160, 10200]
-```
+Green line: tuned scenario staircase. Red line: default-like drift. Same venue, same legs — **different knobs**.
 
-Upper line: tuned scenario staircase. Lower line: default-like drift. Same venue, same legs — **different knobs**.
+### Drawdown envelope — smooth loss path
 
-### Drawdown envelope (tuned scenario)
+<p align="center">
+  <img src="docs/charts/drawdown-smooth.svg" alt="Smooth red drawdown envelope with green 8 percent guardian floor" width="100%" />
+</p>
 
-```mermaid
-xychart-beta
-    title "Drawdown from peak (illustrative, %)"
-    x-axis ["open", "cluster A", "fade week", "breakout run", "end"]
-    y-axis "Drawdown %" -8 --> 0
-    line [0, -2.1, -4.6, -1.8, -0.4]
-```
-
-The 8% guardian is the hard floor. The tuned path in this scenario stayed inside ~4.6%. If you triple size without widening buffer, that envelope will tag the halt.
+Red area is the underwater path. The dashed green line is the 8% guardian floor. The tuned path in this scenario stayed inside ~4.6%. If you triple size without widening buffer, that envelope will tag the halt.
 
 ---
 

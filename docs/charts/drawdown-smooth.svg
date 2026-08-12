@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 340" role="img" aria-label="Smooth drawdown envelope in red">
+  <defs>
+    <linearGradient id="bg4" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#141922"/><stop offset="100%" stop-color="#0b0e11"/>
+    </linearGradient>
+    <linearGradient id="ddR" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#ef4444" stop-opacity=".08"/><stop offset="55%" stop-color="#ef4444" stop-opacity=".38"/><stop offset="100%" stop-color="#b91c1c" stop-opacity=".55"/>
+    </linearGradient>
+    <filter id="glowRd"><feGaussianBlur stdDeviation="2.4" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+  </defs>
+  <rect width="860" height="340" rx="18" fill="url(#bg4)"/>
+  <text x="430" y="32" text-anchor="middle" fill="#e8eaf2" font-family="ui-sans-serif,system-ui,Segoe UI,sans-serif" font-size="16" font-weight="700">Drawdown from peak  smooth loss envelope</text>
+  <text x="430" y="52" text-anchor="middle" fill="#8b93a7" font-family="ui-sans-serif,system-ui,Segoe UI,sans-serif" font-size="11">Red = underwater path · Dashed green = 8% guardian floor</text>
+
+  <g stroke="#1f2937" stroke-width="1">
+    <line x1="80" y1="78" x2="800" y2="78"/>
+    <line x1="80" y1="140" x2="800" y2="140"/>
+    <line x1="80" y1="202" x2="800" y2="202"/>
+    <line x1="80" y1="264" x2="800" y2="264"/>
+  </g>
+  <line x1="80" y1="78" x2="80" y2="290" stroke="#334155"/>
+  <line x1="80" y1="78" x2="800" y2="78" stroke="#334155"/>
+  <text x="72" y="82" text-anchor="end" fill="#94a3b8" font-size="10" font-family="ui-sans-serif,system-ui,sans-serif">0%</text>
+  <text x="72" y="144" text-anchor="end" fill="#f87171" font-size="10" font-family="ui-sans-serif,system-ui,sans-serif">-2%</text>
+  <text x="72" y="206" text-anchor="end" fill="#f87171" font-size="10" font-family="ui-sans-serif,system-ui,sans-serif">-4%</text>
+  <text x="72" y="268" text-anchor="end" fill="#f87171" font-size="10" font-family="ui-sans-serif,system-ui,sans-serif">-6%</text>
+  <text x="72" y="294" text-anchor="end" fill="#ef4444" font-size="10" font-family="ui-sans-serif,system-ui,sans-serif">-8%</text>
+
+  <!-- 8% halt floor -->
+  <line x1="80" y1="290" x2="800" y2="290" stroke="#22c55e" stroke-width="1.6" stroke-dasharray="7 5"/>
+  <text x="792" y="284" text-anchor="end" fill="#4ade80" font-size="10" font-family="ui-sans-serif,system-ui,sans-serif">guardian 8%</text>
+
+  <!-- dd: 0, -2.1, -4.6, -1.8, -0.4  y: 78 + abs(dd)/8*212 -->
+  <!-- 0->78, 2.1->133.7, 4.6->199.9, 1.8->125.7, 0.4->88.6 -->
+  <!-- x: 80, 260, 440, 620, 800 -->
+  <path d="M80,78 C160,100 200,122 260,133.7 C340,160 380,190 440,199.9 C520,170 560,140 620,125.7 C700,108 740,94 800,88.6 L800,78 L80,78 Z" fill="url(#ddR)"/>
+  <path d="M80,78 C160,100 200,122 260,133.7 C340,160 380,190 440,199.9 C520,170 560,140 620,125.7 C700,108 740,94 800,88.6" fill="none" stroke="#ef4444" stroke-width="3.2" stroke-linecap="round" filter="url(#glowRd)"/>
+  <circle cx="440" cy="199.9" r="5" fill="#ef4444"/>
+  <text x="440" y="220" text-anchor="middle" fill="#fecaca" font-size="11" font-family="ui-sans-serif,system-ui,sans-serif">max DD -4.6%</text>
+
+  <text x="80" y="318" fill="#8b93a7" font-size="10" font-family="ui-sans-serif,system-ui,sans-serif">open</text>
+  <text x="260" y="318" text-anchor="middle" fill="#8b93a7" font-size="10" font-family="ui-sans-serif,system-ui,sans-serif">cluster A</text>
+  <text x="440" y="318" text-anchor="middle" fill="#8b93a7" font-size="10" font-family="ui-sans-serif,system-ui,sans-serif">fade week</text>
+  <text x="620" y="318" text-anchor="middle" fill="#8b93a7" font-size="10" font-family="ui-sans-serif,system-ui,sans-serif">breakout run</text>
+  <text x="800" y="318" text-anchor="end" fill="#8b93a7" font-size="10" font-family="ui-sans-serif,system-ui,sans-serif">end</text>
+</svg>
