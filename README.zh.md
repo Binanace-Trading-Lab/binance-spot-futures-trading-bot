@@ -25,7 +25,7 @@
 
 全球 BTC/USDT 流动性集中在币安。本系统按这个深度来设计：**价格离开既定区间才进场**，永续资金费率拥挤时反向，按权益比例下单，日亏损、回撤或仓位上限已热时直接拒单。默认参数只是起点——**有吸引力的 ROI / 胜率 / 回撤，来自你把缓冲、资金费率阈值、仓位和 R 倍数调到自己的账本上。**
 
-完整策略说明、公式、统计情景与调参顺序见 **[English README](README.md)**。下面是中文版产品说明。
+完整英文产品文案见 **[English README](README.md)**。图表与调参表已包含在本页。
 
 ---
 
@@ -152,7 +152,83 @@ $$
 
 **结论：** 默认是安全上车，不是业绩目标。盈利因子从 ~1.2 到 ~2.4，主要来自 **缓冲 + θ + 单笔规模 + 少把盈利交回刷单**。
 
-图表、决策流与调参表与英文版相同，见 [README.md](README.md) 的 Charts / Parameter tuning 两节。
+---
+
+## 图表
+
+**绿色 = 盈利 / 胜。红色 = 亏损 / 更弱路径。** 决策流用 GitHub Mermaid。业绩图是 3D 风格 PNG，可在 GitHub 上正常显示。
+
+### 决策逻辑
+
+```mermaid
+%%{init: {"theme":"base","themeVariables":{"primaryColor":"#14532d","primaryTextColor":"#ecfdf5","primaryBorderColor":"#22c55e","lineColor":"#64748b","secondaryColor":"#7f1d1d","tertiaryColor":"#1e293b"}}}%%
+flowchart TD
+  A["Binance mid BTC/USDT"]:::go --> B["Breakout vs prior range"]:::go
+  A --> C["Funding vs theta"]:::mid
+  C -->|"funding extreme"| D["Fade sell crowded longs or buy crowded shorts"]:::mid
+  B -->|"clear high or low plus buffer"| E["Breakout long or short"]:::go
+  D --> F{"Both fired?"}:::mid
+  E --> F
+  F -->|Yes| G["Fade wins"]:::go
+  F -->|No| H["Use the leg that fired"]:::go
+  G --> I["Size = equity x risk pct"]:::go
+  H --> I
+  I --> J{"Risk guardian"}:::mid
+  J -->|Block| K["Hold"]:::stop
+  J -->|OK| L["Market order, ledger, dual-book delta"]:::go
+  classDef go fill:#14532d,stroke:#22c55e,color:#ecfdf5
+  classDef stop fill:#7f1d1d,stroke:#ef4444,color:#fef2f2
+  classDef mid fill:#1e293b,stroke:#94a3b8,color:#e2e8f0
+```
+
+### 胜负结构
+
+<p align="center">
+  <img src="docs/charts/winloss.png" alt="胜负饼图：绿色为胜、红色为负，优化情景对比偏默认" width="100%" />
+</p>
+
+两张饼看起来接近。**真正拉开的是盈亏比。** 优化情景保住约 2R 赢家（绿）；偏默认被费用压扁 R（红瓣更大）。
+
+### 期望 vs 突破缓冲
+
+<p align="center">
+  <img src="docs/charts/expectancy.png" alt="期望值柱状图：绿色盈利柱，0.08 为红色弱柱，峰值在 0.18" width="100%" />
+</p>
+
+过紧（`0.08`，红）会在币安噪声上刷单。出厂 `0.15` 可用。**`0.18` 是示意中的绿色峰值**，再宽就会缺单。
+
+### 权益曲线
+
+<p align="center">
+  <img src="docs/charts/equity.png" alt="权益曲线：绿色优化路径 vs 红色偏默认路径" width="100%" />
+</p>
+
+绿线：优化情景。红线：偏默认漂移。同一交易所、同一双腿——**不同旋钮**。
+
+### 回撤
+
+<p align="center">
+  <img src="docs/charts/drawdown.png" alt="红色回撤包络与绿色 8% 风控地板" width="100%" />
+</p>
+
+红区是水下路径。绿色虚线是 8% 熔断地板。该示意路径最大回撤约 4.6%。缓冲不加大却把仓位加三倍，包络会撞上熔断。
+
+---
+
+## 参数调优 — 如何打开更好的 ROI、胜率和亏损控制
+
+把 `settings.json` 当成**交易台**，不是奖杯屏。
+
+| 如果你想… | 拧这个 | 往这个方向 | 失败模式 |
+|---|---|---|---|
+| 更少假突破、更好盈亏比 | `breakoutBufferPct` | **0.15 → 0.18–0.22** | 太宽 → 几乎没单 |
+| 只在真正拥挤时反向 | `fundingFadeThreshold` | **0.0008 → 0.0010–0.0012** | 太高 → 反向从不触发 |
+| 每笔更有火力 | `riskPerTradePct` **和** `maxPositionUsd` | **一起**提高 | 只加仓 → 风控拒单或回撤爆炸 |
+| 更强盈亏比倾斜 | `takeProfitR` / `stopLossR` | 例如 **2.2 / 1.0** | TP 极大但胜率极低 → EV 死 |
+| 更低费用拖累 | `useBnbDiscount` | 仅当 BNB **真的付费** 时 `true` | 开了旗却没 BNB → 自己骗自己 |
+| 更紧的痛感上限 | `maxDailyLossUsd`, `maxDrawdownPct` | 学习阶段略**收紧** | 紧到正常一天都做不完 |
+
+**实操顺序：** 先小仓改缓冲 → 再改 θ → 核对 BNB/VIP 费用 → 最后加 `riskPerTradePct`，不要超过 `maxPositionUsd`。
 
 ---
 

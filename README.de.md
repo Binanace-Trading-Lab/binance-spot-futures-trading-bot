@@ -25,7 +25,7 @@
 
 Binance bündelt die globale BTC/USDT-Liquidität. Dieses System nimmt diese Tiefe ernst: Einstieg erst, wenn der Preis eine definierte Range verlässt; Fade, wenn Perp-Funding überfüllt ist; Größe als Anteil am Equity; Ablehnung, wenn Tagesverlust, Drawdown oder Clip-Caps bereits heiß sind. Defaults sind ein Start-Desk — **das attraktive ROI-/Win-Rate-/Drawdown-Profil kommt, wenn Sie Buffer, Funding-Schwelle, Size und R-Multiples auf Ihr Buch kalibrieren.**
 
-Vollständige Formeln, Charts und die englische Produktstimme stehen in **[README.md](README.md)**.
+Die englische Produktstimme steht in **[README.md](README.md)**. Charts und Tuning-Tabelle sind auf dieser Seite.
 
 ---
 
@@ -132,7 +132,83 @@ Lookback `24`, Buffer `0.18`, θ `0.0010`, Risk `0.45%`, Clip nahe **$1.900**, T
 
 Winrate 51,2% · Payoff 1,18 · EV ~+$3,40 · ROI ~+2,0% · PF 1,21 · Max-DD 7,4%. Defaults sind die Rampe, nicht die Decke. Der Sprung im Profit Factor kommt von **Buffer + θ + Clip-Size**.
 
-Charts und die volle Tuning-Tabelle: [README.md](README.md).
+---
+
+## Charts
+
+**Grün = Gewinn / Win. Rot = Verlust / schwächerer Pfad.** Der Entscheidungspfad ist GitHub-Mermaid. Die Performance-Charts sind 3D-Style-PNGs, damit sie auf GitHub sichtbar sind.
+
+### Entscheidungslogik
+
+```mermaid
+%%{init: {"theme":"base","themeVariables":{"primaryColor":"#14532d","primaryTextColor":"#ecfdf5","primaryBorderColor":"#22c55e","lineColor":"#64748b","secondaryColor":"#7f1d1d","tertiaryColor":"#1e293b"}}}%%
+flowchart TD
+  A["Binance mid BTC/USDT"]:::go --> B["Breakout vs prior range"]:::go
+  A --> C["Funding vs theta"]:::mid
+  C -->|"funding extreme"| D["Fade sell crowded longs or buy crowded shorts"]:::mid
+  B -->|"clear high or low plus buffer"| E["Breakout long or short"]:::go
+  D --> F{"Both fired?"}:::mid
+  E --> F
+  F -->|Yes| G["Fade wins"]:::go
+  F -->|No| H["Use the leg that fired"]:::go
+  G --> I["Size = equity x risk pct"]:::go
+  H --> I
+  I --> J{"Risk guardian"}:::mid
+  J -->|Block| K["Hold"]:::stop
+  J -->|OK| L["Market order, ledger, dual-book delta"]:::go
+  classDef go fill:#14532d,stroke:#22c55e,color:#ecfdf5
+  classDef stop fill:#7f1d1d,stroke:#ef4444,color:#fef2f2
+  classDef mid fill:#1e293b,stroke:#94a3b8,color:#e2e8f0
+```
+
+### Win / Loss Mix
+
+<p align="center">
+  <img src="docs/charts/winloss.png" alt="Win-Loss-Mix: gruene Wins vs rote Losses, tuned gegen default-aehnlich" width="100%" />
+</p>
+
+Die Pies sehen ähnlich aus. **Der Payoff macht den Unterschied.** Tuned hält ~2R-Gewinner (grün); default-ähnlich lässt Gebühren das R flachdrücken (größeres rotes Segment).
+
+### Erwartungswert vs Breakout-Buffer
+
+<p align="center">
+  <img src="docs/charts/expectancy.png" alt="Erwartungswert-Balken: gruene Profit-Balken, rote schwache Saeule bei 0.08, Peak bei 0.18" width="100%" />
+</p>
+
+Zu eng (`0.08`, rot) overtradet Binance-Rauschen. Geliefert `0.15` ist nutzbar. **`0.18` ist der illustrative grüne Peak**, bevor Fills verhungern.
+
+### Equity-Pfad
+
+<p align="center">
+  <img src="docs/charts/equity.png" alt="Equity-Pfad: gruene getunte Profitkurve versus rote default-aehnliche Kurve" width="100%" />
+</p>
+
+Grüne Linie: getuntes Szenario. Rote Linie: default-ähnlicher Drift. Gleiche Venue, gleiche Beine — **andere Knöpfe**.
+
+### Drawdown
+
+<p align="center">
+  <img src="docs/charts/drawdown.png" alt="Rote Drawdown-Huellkurve mit gruener 8-Prozent-Guardian-Linie" width="100%" />
+</p>
+
+Rote Fläche ist der Underwater-Pfad. Die gestrichelte grüne Linie ist der 8%-Halt. Der getunte Pfad blieb in diesem Szenario bei ~4,6%. Size verdreifachen ohne weiteren Buffer — dann trifft die Hülle den Halt.
+
+---
+
+## Parameter-Tuning — ROI, Winrate und Verlustkontrolle
+
+Behandeln Sie `settings.json` als **Desk**, nicht als Trophäen-Screen.
+
+| Ziel | Knopf | Richtung | Fehlermodus |
+|---|---|---|---|
+| Weniger Fakeouts, besserer Payoff | `breakoutBufferPct` | **0.15 → 0.18–0.22** | Zu weit → fast keine Fills |
+| Fade nur bei echtem Crowding | `fundingFadeThreshold` | **0.0008 → 0.0010–0.0012** | Zu hoch → Fade feuert nie |
+| Mehr Punch pro Fill | `riskPerTradePct` **und** `maxPositionUsd` | **zusammen** anheben | Nur Size → Guardian blockt oder DD explodiert |
+| Stärkere Payoff-Schiefe | `takeProfitR` / `stopLossR` | z. B. **2.2 / 1.0** | Riesiges TP, winzige WR → EV stirbt |
+| Weniger Fee-Drag | `useBnbDiscount` | `true` **nur wenn BNB wirklich zahlt** | Flag an, kein BNB → Selbsttäuschung |
+| Engeres Schmerzlimit | `maxDailyLossUsd`, `maxDrawdownPct` | Beim Lernen etwas **enger** | So eng, dass ein normaler Tag nicht durchkommt |
+
+**Reihenfolge:** Size klein lassen → Buffer → θ → BNB/VIP prüfen → erst dann `riskPerTradePct` anheben, ohne `maxPositionUsd` zu brechen.
 
 ---
 

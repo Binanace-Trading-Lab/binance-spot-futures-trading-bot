@@ -228,7 +228,7 @@ Shipped-like: lookback `20`, buffer `0.15`, θ `0.0008`, risk `0.5%` (**~$50 cli
 
 ## Charts
 
-Green = win / profit. Red = loss / underwater / fee-eaten settings. 3D pies and bars plus smooth equity/drawdown paths.
+**Green = win / profit. Red = loss / weaker path.** Decision flow is GitHub Mermaid. Performance charts are 2D-rendered 3D-style PNGs so they display on GitHub.
 
 ### Decision logic
 
@@ -253,34 +253,34 @@ flowchart TD
   classDef mid fill:#1e293b,stroke:#94a3b8,color:#e2e8f0
 ```
 
-### Win / loss mix — 3D pies
+### Win / loss mix
 
 <p align="center">
-  <img src="docs/charts/win-loss-3d.svg" alt="3D pie charts: tuned wins in green vs losses in red, compared with default-like mix" width="100%" />
+  <img src="docs/charts/winloss.png" alt="Win loss mix: green wins vs red losses for tuned and default-like scenarios" width="100%" />
 </p>
 
-The pies look similar. **Payoff is what changes.** Tuned keeps ~2R winners (green sleeve); default-like lets fees flatten the R (larger red slice).
+The pies look similar. **Payoff is what changes.** Tuned keeps ~2R winners (green); default-like lets fees flatten the R (larger red slice).
 
-### Expectancy vs breakout buffer — 3D bars
+### Expectancy vs breakout buffer
 
 <p align="center">
-  <img src="docs/charts/expectancy-3d.svg" alt="3D bars of expectancy vs breakout buffer, green profit peak at 0.18, red weak bar at 0.08" width="100%" />
+  <img src="docs/charts/expectancy.png" alt="Expectancy vs breakout buffer: green profit bars, red weak bar at 0.08, peak at 0.18" width="100%" />
 </p>
 
 Too tight (`0.08`, red) overtrades Binance noise. Shipped `0.15` is usable. **`0.18` is the illustrative green peak** before the buffer gets so wide that fills starve.
 
-### Equity path — smooth curves
+### Equity path
 
 <p align="center">
-  <img src="docs/charts/equity-smooth.svg" alt="Smooth equity curves: green tuned profit path versus red default-like path" width="100%" />
+  <img src="docs/charts/equity.png" alt="Equity path: green tuned profit curve versus red default-like curve" width="100%" />
 </p>
 
-Green line: tuned scenario staircase. Red line: default-like drift. Same venue, same legs — **different knobs**.
+Green line: tuned scenario. Red line: default-like drift. Same venue, same legs — **different knobs**.
 
-### Drawdown envelope — smooth loss path
+### Drawdown
 
 <p align="center">
-  <img src="docs/charts/drawdown-smooth.svg" alt="Smooth red drawdown envelope with green 8 percent guardian floor" width="100%" />
+  <img src="docs/charts/drawdown.png" alt="Drawdown envelope in red with green 8 percent guardian floor" width="100%" />
 </p>
 
 Red area is the underwater path. The dashed green line is the 8% guardian floor. The tuned path in this scenario stayed inside ~4.6%. If you triple size without widening buffer, that envelope will tag the halt.
